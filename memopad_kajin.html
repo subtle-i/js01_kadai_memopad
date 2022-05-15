@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>tankaMemoPad</title>
+<script src="js/jquery-2.1.3.min.js"></script>
+<link rel="stylesheet" href="css/sample.css">
+</head>
+<body>
+<header>
+<h1>歌人の手帖</h1>
+</header>
+<main>
+<div id="cards">
+    <div id="card_tanka">
+        <select id="tanka_no"></select>
+        <textarea id="tanka" placeholder="短歌を入力"></textarea>
+        <ul>
+            <li id="save">詠む</li>
+            <li id="clear">作品を全消去する</li>
+        </ul>
+        <table id="list">
+        </table>
+    </div>
+    <div id="card_idea">
+        <select id="idea_no"></select>
+        <textarea id="memo" placeholder="アイデアを入力"></textarea>
+        <ul>
+            <li id="save_idea">記録</li>
+            <li id="clear_idea">刷新</li>
+        </ul>
+        <table id="list_idea">
+        </table>
+    </div>
+</div>
+</main>
+
+<script>
+//短歌を読む
+let tankaHTML = '';
+for(let i=1; i<101; i++){
+    tankaHTML += `<option value="作品No.${i}">作品No.${i}</option>`;
+}
+$(`#tanka_no`).html(tankaHTML);
+$("#save").on("click",function(){
+    const key = $("#tanka_no").val();
+    const value = $("#tanka").val();
+    localStorage.setItem(key,value);
+    const html = `<tr><th>${key}</th><td>${value}</td></tr>`;
+    $("#list").append(html);
+});
+$("#clear").on("click",function(){
+    for(let i=0; i<localStorage.length; i++){
+        const key = localStorage.key(i);
+    if(key.match(/作品/)){
+        localStorage.removeItem(key);
+    }
+    $("#list").empty();
+}});
+for(let i=0; i<localStorage.length; i++){
+    const key   = localStorage.key(i);
+    const value = localStorage.getItem(key);
+    const html = `<tr><th>${key}</th><td>${value}</td></tr>`;
+    if(key.match(/作品/)){
+        $("#list").append(html);
+}}
+//アイデアをメモする
+let ideaHTML = '';
+for(let i=1; i<101; i++){
+    ideaHTML += `<option value="アイデアNo.${i}">アイデアNo.${i}</option>`;
+}
+$(`#idea_no`).html(ideaHTML);
+$("#save_idea").on("click",function(){
+    const key = $("#idea_no").val();
+    const value = $("#memo").val();
+    localStorage.setItem(key,value);
+    const htmlValue = `<tr><th>${key}</th><td>${value}</td></tr>`;
+    $("#list_idea").append(htmlValue)
+});
+$("#clear_idea").on("click",function(){
+    for(let i=0; i<localStorage.length; i++){
+        const key = localStorage.key(i);
+    if(key.match(/アイデア/)){
+        localStorage.removeItem(key);
+    }
+    $("#list_idea").empty();
+}});
+
+//3.ページ読み込み：保存データ取得表示
+for(let i=0; i<localStorage.length; i++){
+    const key   = localStorage.key(i);
+    const value = localStorage.getItem(key);
+    const html = `<tr><th>${key}</th><td>${value}</td></tr>`;
+    if(key.match(/アイデア/)){
+        $("#list_idea").append(html);
+}}
+</script>
+<footer><small>kajintecho 2022.</small></footer>
+</body>
+</html>
